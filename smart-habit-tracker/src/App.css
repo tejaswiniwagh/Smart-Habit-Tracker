@@ -1,3 +1,5 @@
+/* File: src/App.css */
+
 .App {
   text-align: center;
 }
@@ -14,7 +16,6 @@
 }
 
 .App-header {
-  background-color: #282c34;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -35,4 +36,30 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* Apply themed navbar background dynamically
+.MuiAppBar-root {
+  background-color: var(--navbar-bg) !important;
+} */
+
+/* Theme base colors (used by Auth.css and body) */
+:root {
+  --navbar-bg: #636B2F;
+  --page-bg: #D4DE95;
+  --text-color: #000;
+  --glow: #0ef;
+}
+
+body[data-theme='dark'],
+body:not([data-theme='light']) {
+  --navbar-bg: #000;
+  --page-bg: #000;
+  --text-color: #fff;
+}
+
+body {
+  background-color: var(--page-bg);
+  color: var(--text-color);
+  transition: background 0.3s ease, color 0.3s ease;
 }

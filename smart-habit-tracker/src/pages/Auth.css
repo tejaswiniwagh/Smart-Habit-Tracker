@@ -1,0 +1,190 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap");
+
+:root {
+  --navbar-bg: #636B2F;
+  --page-bg: #D4DE95;
+  --text-color: #000;
+  --glow: #0ef;
+  --bar-color: #3D4127;
+  --btn-bg: #3D4127;
+  --register-heading-color: #3D4127;
+  --signup-link-color: #3D4127;
+}
+
+body[data-theme='dark'],
+body:not([data-theme='light']) {
+  --navbar-bg: #000;
+  --page-bg: #000;
+  --text-color: #fff;
+  --bar-color: #2c4766;
+  --btn-bg: var(--glow);
+  --register-heading-color: var(--glow);
+  --signup-link-color: var(--glow);
+}
+
+body {
+  background-color: var(--page-bg);
+  color: var(--text-color);
+  transition: background 0.3s ease, color 0.3s ease;
+  margin: 0;
+}
+
+.page-wrapper {
+  padding-top: 80px;
+  min-height: calc(100vh - 80px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* changed from center */
+}
+
+.MuiAppBar-root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--navbar-bg) !important;
+  z-index: 9999;
+}
+
+.container {
+  position: relative;
+  width: 256px;
+  height: 256px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 180px auto 0 auto;;
+}
+
+.container span {
+  position: absolute;
+  left: 0;
+  width: 32px;
+  height: 6px;
+  background: var(--bar-color);
+  border-radius: 8px;
+  transform-origin: 128px;
+  transform: scale(2.2) rotate(calc(var(--i) * (360deg / 50)));
+  animation: animateBlink 3s linear infinite;
+  animation-delay: calc(var(--i) * (3s / 50));
+}
+
+@keyframes animateBlink {
+  0% {
+    background: var(--glow);
+  }
+  25% {
+    background: var(--bar-color);
+  }
+}
+
+.auth-box {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  width: 100%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.auth-box form {
+  width: 100%;
+  padding: 0 50px;
+}
+
+.auth-box h2 {
+  font-size: 2em;
+  color: var(--register-heading-color);
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.input-box {
+  position: relative;
+  margin: 15px 0;
+}
+
+.input-box input {
+  width: 90%;
+  height: 34px;
+  background: transparent;
+  border: 2px solid var(--bar-color);
+  outline: none;
+  border-radius: 40px;
+  font-size: 0.9em;
+  color: var(--text-color);
+  padding: 0 18px;
+  transition: 0.5s;
+}
+
+.input-box input:focus,
+.input-box input:valid {
+  border-color: var(--glow);
+}
+
+.input-box label {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%);
+  font-size: 0.9em;
+  color: var(--text-color);
+  pointer-events: none;
+  transition: 0.5s ease;
+}
+
+.input-box input:focus ~ label,
+.input-box input:valid ~ label {
+  top: 1px;
+  font-size: 0.8em;
+  background-color: inherit;
+  padding: 0 6px;
+  color: var(--glow);
+}
+
+.forgot-password {
+  margin: -15px 0 10px;
+  text-align: center;
+}
+
+.forgot-password a {
+  font-size: 0.85em;
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+}
+
+.btn {
+  width: 100%;
+  height: 45px;
+  border-radius: 45px;
+  background: var(--btn-bg);
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 1em;
+  color: var(--page-bg);
+  font-weight: 600;
+}
+
+.signup-link {
+  margin: 5px 0 5px;
+  text-align: center;
+}
+
+.signup-link a {
+  font-size: 0.8em;
+  color: var(--signup-link-color);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.signup-link a:hover {
+  text-decoration: underline;
+}

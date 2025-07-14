@@ -1,18 +1,14 @@
-// File: src/components/Navbar.jsx
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   AppBar,
   Toolbar,
   Typography,
   IconButton,
   Button,
-  Switch,
   Avatar,
   Menu,
   MenuItem,
-  CssBaseline,
-  ThemeProvider,
-  createTheme
+  Switch
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { Wand2 } from 'lucide-react';
@@ -21,26 +17,21 @@ import { motion } from 'framer-motion';
 export default function Navbar() {
   const [darkMode, setDarkMode] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const theme = useMemo(() => createTheme({
-    palette: {
-      mode: darkMode ? 'dark' : 'light',
-      primary: {
-        main: '#636B2F'
-      },
-      background: {
-        default: darkMode ? '#121212' : '#f4f4f4',
-        paper: darkMode ? '#1e1e1e' : '#ffffff'
-      },
-      text: {
-        primary: darkMode ? '#fff' : '#000',
-        secondary: darkMode ? '#bbb' : '#555'
-      }
-    }
-  }), [darkMode]);
+  useEffect(() => {
+    const theme = localStorage.getItem('theme') || 'dark';
+    document.body.setAttribute('data-theme', theme);
+    setDarkMode(theme === 'dark');
+    setIsLoggedIn(!!localStorage.getItem('token'));
+  }, []);
 
   const handleThemeToggle = () => {
-    setDarkMode(prev => !prev);
+    const next = !darkMode;
+    setDarkMode(next);
+    const theme = next ? 'dark' : 'light';
+    document.body.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
   };
 
   const handleProfileClick = (event) => {
@@ -51,39 +42,75 @@ export default function Navbar() {
     setAnchorEl(null);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+    handleClose();
+  };
+
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <motion.div
-        initial={{ y: -80, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6 }}
-      >
-        <AppBar position="static" color="primary">
-          <Toolbar>
-            <IconButton edge="start" color="inherit">
-              <Wand2 size={24} />
-            </IconButton>
-            <Typography variant="h6" sx={{ flexGrow: 1 }}>
-              Smart Habit Tracker
-            </Typography>
-            <Button color="inherit" component={Link} to="/">Dashboard</Button>
-            <Button color="inherit" component={Link} to="/new">Add Habit</Button>
-            <Switch checked={darkMode} onChange={handleThemeToggle} />
-            <IconButton onClick={handleProfileClick} sx={{ ml: 2 }}>
-              <Avatar alt="User" src="https://i.pravatar.cc/40" />
-            </IconButton>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleClose}>Logout</MenuItem>
-            </Menu>
-          </Toolbar>
-        </AppBar>
-      </motion.div>
-    </ThemeProvider>
+    <motion.div
+      initial={{ y: -80, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6 }}
+    >
+      <AppBar position="fixed" sx={{ zIndex: 1201 }}>
+        <Toolbar>
+          {/* <IconButton edge="start" color="inherit">
+            <Wand2 size={24} />
+          </IconButton> */}
+          <img
+            src="..\assets\smart-habit-tracker-logo.png"
+            alt="Logo"
+            style={{
+              height: '45px',
+              marginLeft: '12px',
+              borderRadius: '8px',
+              // background: '#fff',
+              padding: '2px'
+            }}
+          />
+         <motion.div
+            style={{ flexGrow: 1, 
+              fontWeight: 700, 
+              fontSize: '1.3rem', 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '6px',
+              fontFamily: '"Poppins", sans-serif',
+              marginLeft: '12px' // 👈 pushes it closer to the left
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            <span style={{ color: '#0ef' }}>Smart</span>
+            <span style={{ color: darkMode ? '#fff' : '#000' }}>Habit</span>
+            <span style={{ color: '#0ef' }}>Tracker</span>
+          </motion.div>
+
+
+          {isLoggedIn ? (
+            <>
+              <Button color="inherit" component={Link} to="/">Dashboard</Button>
+              <Button color="inherit" component={Link} to="/new">Add Habit</Button>
+              <Switch checked={darkMode} onChange={handleThemeToggle} />
+              <IconButton onClick={handleProfileClick} sx={{ ml: 2 }}>
+                <Avatar alt="User" src="https://i.pravatar.cc/40" />
+              </IconButton>
+              <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+                <MenuItem onClick={handleClose}>Profile</MenuItem>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              </Menu>
+            </>
+          ) : (
+            <>
+              <Button color="inherit" component={Link} to="/register">Register</Button>
+              <Button color="inherit" component={Link} to="/login">Login</Button>
+              <Switch checked={darkMode} onChange={handleThemeToggle} />
+            </>
+          )}
+        </Toolbar>
+      </AppBar>
+    </motion.div>
   );
 }
