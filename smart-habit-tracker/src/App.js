@@ -4,6 +4,8 @@ import Navbar from './components/Navbar';
 import HabitForm from './pages/HabitForm';
 import Dashboard from './pages/Dashboard';
 import HabitTracker from './pages/HabitTracker';
+import Register from './pages/Register';
+import Login from './pages/Login';
 
 function App() {
   return (
@@ -12,6 +14,8 @@ function App() {
       <div style={{ padding: '2rem' }}>
         <Routes>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/register" element={<Register />} />
+          <Route path='/login' element={<Login />} />
           <Route path="/new" element={<HabitForm />} />
           <Route path="/habit/:id" element={<HabitTracker />} />
         </Routes>
