@@ -1,11 +1,17 @@
-// File: src/utils/api.js
 import axios from 'axios';
 
-const api = axios.create({
-  baseURL: 'http://localhost:5000/api', // Backend base URL
-  headers: {
-    'Content-Type': 'application/json'
-  }
+const API = axios.create({
+  baseURL: process.env.REACT_APP_API_BASE_URL ,
+  withCredentials: true
 });
 
-export default api;
+// ✅ These MUST start with /api/auth to match backend routes
+
+export const sendOTP = (email) =>
+  API.post('/auth/send-otp', { email });
+
+export const registerUser = (formData) =>
+  API.post('/auth/register', formData);
+
+export const loginUser = (data) =>
+  API.post('/auth/login', data);
