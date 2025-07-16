@@ -1,18 +1,45 @@
+// src/pages/Login.jsx
+
 import React, { useState } from 'react';
+import axios from 'axios';
 import './Auth.css';
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false); // success state
 
   const handleChange = e =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    alert(`Login with Email: ${formData.email}`);
+    setLoading(true);
+    setError('');
+    setSuccess(false);
+
+    try {
+      const response = await axios.post('http://localhost:5000/auth/login', formData);
+      const { token, user } = response.data;
+
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+
+      console.log('JWT Token:', token); // Log token
+
+      setSuccess(true); // Show popup
+
+      setTimeout(() => {
+        setSuccess(false);
+        window.location.href = '/new'; // Navigate after 5s
+      }, 5000);
+    } catch (err) {
+      const msg = err.response?.data?.message || 'Login failed';
+      setError(msg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -21,6 +48,13 @@ const Login = () => {
         {[...Array(50)].map((_, i) => (
           <span key={i} style={{ '--i': i }} />
         ))}
+
+        {success && (
+          <div className="popup success">
+            Login successful! 
+          </div>
+        )}
+
         <div className="auth-box">
           <h2>Login</h2>
           <form onSubmit={handleSubmit}>
@@ -44,7 +78,13 @@ const Login = () => {
                 onChange={handleChange}
               />
             </div>
-            <button className="btn" type="submit">Login</button>
+
+            {error && <div className="error-msg">{error}</div>}
+
+            <button className="btn" type="submit" disabled={loading}>
+              {loading ? 'Logging in...' : 'Login'}
+            </button>
+
             <div className="signup-link">
               <a href="/register">Don't have an account? Register</a>
             </div>
