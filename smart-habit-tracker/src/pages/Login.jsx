@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './Auth.css';
+import { loginUser} from '../utils/api';
+
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -13,6 +15,7 @@ const Login = () => {
   const handleChange = e =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
+  
   const handleSubmit = async e => {
     e.preventDefault();
     setLoading(true);
@@ -20,7 +23,8 @@ const Login = () => {
     setSuccess(false);
 
     try {
-      const response = await axios.post('http://localhost:5000/auth/login', formData);
+      // const response = await axios.post('http://localhost:5000/auth/login', formData);
+      const response = await loginUser(formData);
       const { token, user } = response.data;
 
       localStorage.setItem('token', token);

@@ -1,17 +1,13 @@
+// HabitForm.jsx
 import React, { useState } from 'react';
 import './Auth.css';
+import { createHabit } from '../utils/api';
 
 const AddHabit = () => {
   const [form, setForm] = useState({
-    title: '',
-    emoji: '🔥',
-    type: '',
-    startDate: '',
-    target: '',
-    timeOfDay: '',
-    reminder: false,
-    category: '',
-    note: ''
+    title: '', emoji: '🔥', type: '', startDate: '',
+    target: '', timeOfDay: '', reminder: false,
+    category: '', note: ''
   });
 
   const handleChange = e => {
@@ -22,9 +18,25 @@ const AddHabit = () => {
     }));
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    alert(`🎯 Habit Created: ${form.emoji} ${form.title} (${form.type}) for ${form.target} days`);
+    const habitData = {
+      habit_name: form.title,
+      start_date: form.startDate,
+      target_days: form.target,
+      frequency: form.type,
+      time_of_day: form.timeOfDay,
+      category: form.category,
+      h_note: form.note,
+      reminder: form.reminder
+    };
+    try {
+      const token = localStorage.getItem('token');
+      const res = await createHabit(habitData, token);
+      alert(`✅ ${res.data.message}`);
+    } catch (err) {
+      alert('❌ Failed to create habit: ' + err.response?.data?.error);
+    }
   };
 
   return (
@@ -33,59 +45,35 @@ const AddHabit = () => {
         <div className="auth-box">
           <h2>Create New Habit</h2>
           <form onSubmit={handleSubmit}>
-
             <div className="input-box">
               <input type="text" name="title" placeholder="Habit title (e.g. Read)" required value={form.title} onChange={handleChange} />
             </div>
-
-            {/* <div className="input-box">
-              <label style={{ color: 'var(--text-color)', fontSize: '0.85em' }}>Emoji Icon:</label>
-              <select name="emoji" value={form.emoji} onChange={handleChange} style={{ width: '100%', padding: '6px', borderRadius: '12px' }}>
-                <option value="🔥">🔥</option>
-                <option value="📚">📚</option>
-                <option value="💧">💧</option>
-                <option value="🎯">🎯</option>
-                <option value="🧘">🧘</option>
-              </select>
-            </div> */}
-
             <div className="input-box">
-              {/* <label style={{ color: 'var(--text-color)', fontSize: '0.85em' }}>Frequency:</label> */}
               <select name="type" value={form.type} onChange={handleChange} style={{ width: '100%', padding: '6px', borderRadius: '12px' }}>
-                <option value="" disabled hidden style={{ color: 'var(--text-color)', opacity: 0.6 }}>Frequency</option>
+                <option value="" disabled hidden>Frequency</option>
                 <option>Daily</option>
                 <option>Weekly</option>
                 <option>Custom</option>
               </select>
             </div>
-
             <div className="input-box">
               <input type="date" name="startDate" required value={form.startDate} onChange={handleChange} />
             </div>
-
             <div className="input-box">
               <input type="number" name="target" min="1" placeholder="Target days (e.g. 30)" required value={form.target} onChange={handleChange} />
             </div>
-
             <div className="input-box">
-              {/* <label style={{ color: 'var(--text-color)', fontSize: '0.85em' }}>Time of Day:</label> */}
               <select name="timeOfDay" value={form.timeOfDay} onChange={handleChange} style={{ width: '100%', padding: '6px', borderRadius: '12px' }}>
-                <option value="" disabled hidden style={{ color: 'var(--text-color)', opacity: 0.6 }}>Time of Day</option>
+                <option value="" disabled hidden>Time of Day</option>
                 <option>Morning</option>
                 <option>Afternoon</option>
                 <option>Evening</option>
                 <option>Anytime</option>
               </select>
             </div>
-
-            <div className="input-box" >
-              <select
-                name="category"
-                value={form.category}
-                onChange={handleChange}
-                style={{ width: '100%', padding: '6px', borderRadius: '12px' }}
-              >
-                <option value="" disabled hidden style={{ color: 'var(--text-color)', opacity: 0.6 }}>Category</option>
+            <div className="input-box">
+              <select name="category" value={form.category} onChange={handleChange} style={{ width: '100%', padding: '6px', borderRadius: '12px' }}>
+                <option value="" disabled hidden>Category</option>
                 <option value="Health">Health</option>
                 <option value="Work">Work</option>
                 <option value="Learning">Learning</option>
@@ -93,7 +81,6 @@ const AddHabit = () => {
                 <option value="Other">Other</option>
               </select>
             </div>
-            
             <div className="input-box">
               <textarea
                 name="note"
@@ -104,12 +91,10 @@ const AddHabit = () => {
                 style={{ width: '100%', padding: '8px', borderRadius: '12px', fontSize: '0.9em' }}
               />
             </div>
-
             <div className="input-box" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <label style={{ color: 'var(--text-color)' , fontSize: '1em' }}>Reminder:</label>
+              <label style={{ color: 'var(--text-color)', fontSize: '1em' }}>Reminder:</label>
               <input type="checkbox" name="reminder" checked={form.reminder} onChange={handleChange} />
             </div>
-            
             <button className="btn" type="submit">Start Challenge 🚀</button>
           </form>
         </div>

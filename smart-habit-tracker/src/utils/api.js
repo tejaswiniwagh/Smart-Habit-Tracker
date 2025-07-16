@@ -15,3 +15,8 @@ export const registerUser = (formData) =>
 
 export const loginUser = (data) =>
   API.post('/auth/login', data);
+
+export const createHabit = (habitData, token) =>
+  API.post('/habits', habitData, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
