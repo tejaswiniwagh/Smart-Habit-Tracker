@@ -33,6 +33,7 @@ const AddHabit = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [success, setSuccess] = useState(false);
 
   const handleChange = e => {
     const { name, value, type, checked } = e.target;
@@ -80,8 +81,14 @@ const AddHabit = () => {
     }
 
     try {
-      const res = await createHabit(habitData, token);
-      alert(`✅ ${res.data.message}`);
+      await createHabit(habitData, token);
+      setSuccess(true);
+      setForm({
+        title: '', emoji: '🔥', type: '', startDate: '',
+        target: '', timeOfDay: '', reminder: false,
+        category: '', otherCategory: '', note: ''
+      });
+      setTimeout(() => setSuccess(false), 3000);
     } catch (err) {
       alert('❌ Failed to create habit: ' + (err.response?.data?.error || err.message));
     }
@@ -92,6 +99,19 @@ const AddHabit = () => {
   return (
     <div className="page-wrapper">
       <div className="container">
+        {success && (
+          <div className="popup success" style={{
+            fontSize: '1.2rem',
+            textAlign: 'center',
+            padding: '12px',
+            borderRadius: '12px',
+            background: '#d4edda',
+            color: '#155724',
+            marginBottom: '20px'
+          }}>
+            🎉 Habit Created Successfully! Keep going 💪🚀🔥
+          </div>
+        )}
         <div className="auth-box">
           <h2>Create New Habit</h2>
           <form onSubmit={handleSubmit} noValidate>
@@ -136,10 +156,13 @@ const AddHabit = () => {
                 type="number"
                 name="target"
                 min="1"
-                placeholder="Target days (e.g. 30)"
+                placeholder="Target days"
+                required
                 value={form.target}
-                onChange={handleChange}
-                style={inputStyle('target')}
+                onChange={(e) => {
+                  const val = Math.max(1, parseInt(e.target.value || 1));
+                  setForm(prev => ({ ...prev, target: val }));
+                }}
               />
               {errors.target && <p className="error-text">{errors.target}</p>}
             </div>
