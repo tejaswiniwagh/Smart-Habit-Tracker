@@ -19,25 +19,33 @@ const AddHabit = () => {
   };
 
   const handleSubmit = async e => {
-    e.preventDefault();
-    const habitData = {
-      habit_name: form.title,
-      start_date: form.startDate,
-      target_days: form.target,
-      frequency: form.type,
-      time_of_day: form.timeOfDay,
-      category: form.category,
-      h_note: form.note,
-      reminder: form.reminder
-    };
-    try {
-      const token = localStorage.getItem('token');
-      const res = await createHabit(habitData, token);
-      alert(`✅ ${res.data.message}`);
-    } catch (err) {
-      alert('❌ Failed to create habit: ' + err.response?.data?.error);
-    }
+  e.preventDefault();
+
+  const habitData = {
+    habit_name: form.title,
+    start_date: form.startDate,
+    target_days: form.target,
+    frequency: form.type,
+    time_of_day: form.timeOfDay,
+    category: form.category,
+    h_note: form.note,
+    reminder: form.reminder
   };
+
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('⚠️ Please login before creating a habit.');
+    return;
+  }
+
+  try {
+    const res = await createHabit(habitData, token);
+    alert(`✅ ${res.data.message}`);
+  } catch (err) {
+    alert('❌ Failed to create habit: ' + (err.response?.data?.error || err.message));
+  }
+};
+
 
   return (
     <div className="page-wrapper">

@@ -23,7 +23,15 @@ export default function Navbar() {
     const theme = localStorage.getItem('theme') || 'dark';
     document.body.setAttribute('data-theme', theme);
     setDarkMode(theme === 'dark');
-    setIsLoggedIn(!!localStorage.getItem('token'));
+  }, []);
+
+  useEffect(() => {
+    const checkLoginStatus = () => {
+      setIsLoggedIn(!!localStorage.getItem('token'));
+    };
+    checkLoginStatus();
+    window.addEventListener('storage', checkLoginStatus);
+    return () => window.removeEventListener('storage', checkLoginStatus);
   }, []);
 
   const handleThemeToggle = () => {
@@ -45,6 +53,7 @@ export default function Navbar() {
   const handleLogout = () => {
     localStorage.removeItem('token');
     setIsLoggedIn(false);
+    window.dispatchEvent(new Event('storage'));
     handleClose();
   };
 
@@ -106,7 +115,7 @@ export default function Navbar() {
             <>
               <Button color="inherit" component={Link} to="/register">Register</Button>
               <Button color="inherit" component={Link} to="/login">Login</Button>
-              <Switch checked={darkMode} onChange={handleThemeToggle} />
+              {/* <Switch checked={darkMode} onChange={handleThemeToggle} /> */}
             </>
           )}
         </Toolbar>
