@@ -108,8 +108,8 @@ body {
   margin: 15px 0;
 }
 
-.input-box input {
-  width: 90%;
+.input-box input   {
+  width: 87%;
   height: 34px;
   background: transparent;
   border: 2px solid var(--bar-color);
@@ -122,7 +122,7 @@ body {
 }
 
 .input-box input:focus,
-.input-box input:valid {
+textarea:focus{
   border-color: var(--glow);
 }
 
@@ -192,7 +192,7 @@ body {
 
 /* ✅ NEW: Dark/Light mode support for select */
 .input-box select {
-  width: 90%;
+  width: 160%;
   height: 36px;
   background-color: transparent;
   color: var(--text-color);
@@ -215,7 +215,7 @@ body {
 
 /* ✅ NEW: Dark/Light mode support for select */
 .input-box textarea {
-  width: 90%;
+  width: 100px;
   height: 36px;
   background-color: transparent;
   color: var(--text-color);
@@ -264,3 +264,46 @@ body {
   100% { opacity: 0; }
 }
 
+/* Counter button styling */
+.counter-btn {
+  background-color: var(--primary-color);
+  color: white;
+  font-size: 1.2rem;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.counter-btn:hover {
+  background-color: var(--primary-dark);
+}
+
+.custom-datepicker-input {
+  width: 100%;
+  padding: 8px 12px 8px 36px; /* left padding for icon */
+  border-radius: 12px;
+  font-size: 0.95rem;
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  box-sizing: border-box;
+}
+
+.input-box
+.custom-datepicker-input {
+  width: 120%;
+}
+
+
+.calendar-icon-left {
+  position: absolute;
+  left: 220px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-color);
+  font-size: 1rem;
+  pointer-events: none;
+}
