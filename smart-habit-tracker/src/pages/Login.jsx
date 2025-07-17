@@ -36,7 +36,7 @@ const Login = () => {
 
       setTimeout(() => {
         setSuccess(false);
-        window.location.href = '/new'; // Navigate after 5s
+        window.location.href = '/dashboard'; // Navigate after 5s
       }, 5000);
     } catch (err) {
       const msg = err.response?.data?.message || 'Login failed';
