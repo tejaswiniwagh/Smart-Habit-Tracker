@@ -89,6 +89,10 @@ const Login = () => {
               {loading ? 'Logging in...' : 'Login'}
             </button>
 
+           <div className="forgot-password-link" style={{ textAlign: 'center', marginTop: '12px' }}>
+              <a href="/forgot-password">Forgot Password?</a>
+            </div>
+
             <div className="signup-link">
               <a href="/register">Don't have an account? Register</a>
             </div>

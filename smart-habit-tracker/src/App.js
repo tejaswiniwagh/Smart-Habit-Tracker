@@ -6,6 +6,7 @@ import HabitTracker from './pages/HabitTracker';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import HabitDashboard from './pages/HabitDashboard';
+import ForgotPassword from './pages/ForgotPassword';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/dashboard" element={<HabitDashboard />} />
           <Route path="/register" element={<Register />} />
           <Route path='/login' element={<Login />} />
+          <Route path='/forgot-password' element={<ForgotPassword />} />
           <Route path="/new" element={<HabitForm />} />
           <Route path="/habit/:id" element={<HabitTracker />} />
         </Routes>
