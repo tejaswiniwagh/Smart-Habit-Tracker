@@ -147,7 +147,7 @@ textarea:focus{
 }
 
 .forgot-password {
-  margin: -15px 0 10px;
+  margin: 10px;
   text-align: center;
 }
 
@@ -175,7 +175,7 @@ textarea:focus{
 }
 
 .signup-link {
-  margin: 5px 0 5px;
+  margin: 20px 0 15px;
   text-align: center;
 }
 
