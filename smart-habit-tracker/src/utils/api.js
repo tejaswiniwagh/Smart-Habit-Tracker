@@ -20,3 +20,15 @@ export const createHabit = (habitData, token) =>
   API.post('/habits', habitData, {
     headers: { Authorization: `Bearer ${token}` },
   });
+
+export const requestPasswordReset = (email) =>
+  API.post('/auth/forgot-password', { email });
+
+export const verifyOtp = (email, otp) =>
+  API.post('/auth/verify-otp', { email, otp });
+
+export const resetPassword = (email, newPassword) =>
+  API.post('/auth/reset-password', { email, newPassword });
+
+export const resendOTP = (email) =>
+  API.post('/auth/forgot-password', { email });
