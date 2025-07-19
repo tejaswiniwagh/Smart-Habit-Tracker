@@ -36,8 +36,8 @@ const Login = () => {
 
       setTimeout(() => {
         setSuccess(false);
-        window.location.href = '/dashboard'; // Navigate after 5s
-      }, 5000);
+        window.location.href = '/habit-dashboard'; // Navigate after 5s
+      }, 2000);
     } catch (err) {
       const msg = err.response?.data?.message || 'Login failed';
       setError(msg);

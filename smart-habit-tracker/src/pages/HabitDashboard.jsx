@@ -1,100 +1,116 @@
-// src/pages/HabitDashboard.jsx
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Card from '../components/ui/card';
-import Button from '../components/ui/button';
+import { motion, AnimatePresence } from 'framer-motion';
 import { getHabits, getHabitStats } from '../utils/api';
+import { useNavigate } from 'react-router-dom';
+import HabitCalendar from '../components/HabitCalendar.jsx';
+import { toast } from 'react-toastify';
+import './Auth.css';
 
 const emojiFromStreak = (streak) => {
-  if (streak >= 7) return '🔥';
-  if (streak >= 3) return '😎';
-  if (streak === 0) return '🐥';
-  return '🧊';
+  if (streak >= 10) return '🔥';
+  if (streak >= 5) return '😊';
+  if (streak > 0) return '🙂';
+  return '😵';
+};
+
+const HabitPopup = ({ habit, onClose }) => {
+  if (!habit) return null;
+
+  return (
+    <div className="popup-overlay">
+      <div className="popup">
+        <button onClick={onClose} className="popup-close">✖</button>
+        <h2>{habit.habit_name} {emojiFromStreak(habit.streak)}</h2>
+        <div className="popup-details">
+          <p>📅 Start: {habit.start_date}</p>
+          <p>🎯 Target Days: {habit.target_days}</p>
+          <p>⏰ Time: {habit.time_of_day}</p>
+          <p>🔁 Frequency: {habit.frequency}</p>
+          <p>📝 Note: {habit.h_note || 'N/A'}</p>
+          <p>🔔 Reminder: {habit.reminder ? 'Yes' : 'No'}</p>
+          <p>🔥 Streak: {habit.streak} days</p>
+        </div>
+        <button className="update-btn">Update Habit</button>
+      </div>
+    </div>
+  );
 };
 
 export default function HabitDashboard() {
   const [habits, setHabits] = useState([]);
-  const [activeHabit, setActiveHabit] = useState(null);
-  const [streak, setStreak] = useState(null);
+  const [selectedHabit, setSelectedHabit] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      toast.warning('Login required!');
+      return navigate('/login');
+    }
+
     const fetchHabits = async () => {
       try {
-        const res = await getHabits();
-        setHabits(res.data);
+        const res = await getHabits(token);
+        const enriched = await Promise.all(
+          res.data.map(async (habit) => {
+            try {
+              const stats = await getHabitStats(habit.id);
+              return { ...habit, streak: stats.streak, completionDates: stats.dates || [] };
+            } catch {
+              return { ...habit, streak: 0, completionDates: [] };
+            }
+          })
+        );
+        setHabits(enriched);
       } catch (err) {
         console.error('Error fetching habits:', err);
       }
     };
 
     fetchHabits();
-  }, []);
+  }, [navigate]);
 
-  const handleSelectHabit = async (habit) => {
-    try {
-      const res = await getHabitStats(habit.id);
-      setActiveHabit(habit);
-      setStreak(res.data.streak);
-    } catch (err) {
-      console.error('Error fetching stats:', err);
-    }
-  };
-
-  const renderStatus = (streak) => {
-    const emoji = emojiFromStreak(streak);
-    const status =
-      streak >= 7 ? 'Hot Streak!' :
-      streak >= 3 ? 'Going Strong' :
-      streak === 0 ? 'Getting Started' :
-      'Cooling Off';
-    return `${emoji} ${status}`;
-  };
+  const allDates = habits.flatMap(h => h.completionDates || []);
 
   return (
-    <div className="min-h-screen p-6 bg-gray-100 dark:bg-gray-900">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {habits.map((habit) => (
-          <Card
-            key={habit.id}
-            onClick={() => handleSelectHabit(habit)}
-            className="flex flex-col items-start gap-1 hover:bg-blue-100 dark:hover:bg-gray-800"
-          >
-            <div className="text-lg font-semibold">{habit.habit_name}</div>
-            <div className="text-sm text-gray-500">{habit.category}</div>
-          </Card>
-        ))}
+    <motion.div
+      className="habit-dashboard"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.4 }}
+    >
+      <h1 className="habit-heading">🌿 Your Smart Habit Dashboard</h1>
 
-        {activeHabit && (
-          <div className="md:col-span-3 mt-6">
-            <Card className="p-6 bg-white dark:bg-gray-800">
-              <div className="text-xl font-semibold mb-2">
-                {activeHabit.habit_name} {renderStatus(streak)}
-              </div>
-              <div className="grid grid-cols-2 gap-2 text-sm text-gray-700 dark:text-gray-300">
-                <div>Start: {activeHabit.start_date}</div>
-                <div>Target: {activeHabit.target_days} days</div>
-                <div>Frequency: {activeHabit.frequency}</div>
-                <div>Time: {activeHabit.time_of_day}</div>
-                <div>Reminder: {activeHabit.reminder}</div>
-                <div>Category: {activeHabit.category}</div>
-              </div>
-
-              <div className="mt-4">
-                <div className="text-gray-600 dark:text-gray-400 italic">"{activeHabit.h_note}"</div>
-              </div>
-
-              {streak < 2 && (
-                <div className="mt-4">
-                  <Button onClick={() => navigate(`/update/${activeHabit.id}`)}>
-                    ✏️ Update Habit
-                  </Button>
+      {habits.length === 0 ? (
+        <div className="no-habits-message">
+          <h2>😎 No habits yet!</h2>
+          <p>Start your habit journey today 💪🌱</p>
+        </div>
+      ) : (
+        <div className="habit-grid">
+          <AnimatePresence>
+            {habits.map((habit, index) => (
+              <motion.div
+                key={habit.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
+                whileHover={{ scale: 1.03 }}
+                className="habit-card"
+                onClick={() => setSelectedHabit(habit)}
+              >
+                <div className="card-title">
+                  {habit.habit_name} {emojiFromStreak(habit.streak)}
                 </div>
-              )}
-            </Card>
-          </div>
-        )}
-      </div>
-    </div>
+                <div className="card-category">#{habit.category}</div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
+      )}
+
+      <HabitPopup habit={selectedHabit} onClose={() => setSelectedHabit(null)} />
+      <HabitCalendar completionDates={allDates} />
+    </motion.div>
   );
 }

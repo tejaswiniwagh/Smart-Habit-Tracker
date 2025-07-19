@@ -7,14 +7,17 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import HabitDashboard from './pages/HabitDashboard';
 import ForgotPassword from './pages/ForgotPassword';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
     <Router>
       <Navbar />
+      <ToastContainer />
       <div style={{ padding: '2rem' }}>
         <Routes>
-          <Route path="/dashboard" element={<HabitDashboard />} />
+          <Route path="/habit-dashboard" element={<HabitDashboard />} />
           <Route path="/register" element={<Register />} />
           <Route path='/login' element={<Login />} />
           <Route path='/forgot-password' element={<ForgotPassword />} />

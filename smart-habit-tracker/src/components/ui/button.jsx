@@ -1,10 +1,4 @@
-export default function Button({ children, onClick, className = '' }) {
-  return (
-    <button
-      onClick={onClick}
-      className={`px-4 py-2 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-medium transition ${className}`}
-    >
-      {children}
-    </button>
-  );
+// button.jsx
+export default function Button({ children, ...props }) {
+  return <button className="px-4 py-2 rounded bg-emerald-500 text-white hover:bg-emerald-600" {...props}>{children}</button>;
 }
