@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   AppBar,
   Toolbar,
@@ -13,6 +14,7 @@ import {
 import { Link } from 'react-router-dom';
 import { Wand2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { toast } from 'react-toastify';
 
 export default function Navbar() {
   const [darkMode, setDarkMode] = useState(false);
@@ -50,11 +52,16 @@ export default function Navbar() {
     setAnchorEl(null);
   };
 
+  const navigate = useNavigate();
+  
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    setIsLoggedIn(false);
-    window.dispatchEvent(new Event('storage'));
-    handleClose();
+  localStorage.removeItem('token');
+  setIsLoggedIn(false);
+  window.dispatchEvent(new Event('storage'));
+  handleClose();
+
+  toast.success('Logged out successfully!');
+  setTimeout(() => navigate('/'), 1200);
   };
 
   return (
@@ -100,7 +107,7 @@ export default function Navbar() {
 
           {isLoggedIn ? (
             <>
-              <Button color="inherit" component={Link} to="/">Dashboard</Button>
+              <Button color="inherit" component={Link} to="/habit-dashboard">Dashboard</Button>
               <Button color="inherit" component={Link} to="/new">Add Habit</Button>
               <Switch checked={darkMode} onChange={handleThemeToggle} />
               <IconButton onClick={handleProfileClick} sx={{ ml: 2 }}>

@@ -1,0 +1,50 @@
+/* src/components/HabitCalendar.css */
+
+.calendar-wrapper {
+  background: var(--page-bg);
+  border-radius: 12px;
+  margin: 40px auto 20px;
+  padding: 16px;
+  max-width: 800px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+.calendar-title {
+  text-align: center;
+  font-size: 1.2rem;
+  color: var(--register-heading-color);
+  margin-bottom: 12px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+}
+
+.calendar-cell {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-weight: bold;
+  text-align: center;
+  line-height: 36px;
+  font-size: 0.95rem;
+  color: white;
+}
+
+.tick {
+  background-color: green;
+}
+
+.cross {
+  background-color: red;
+}
+
+.disabled {
+  background-color: #666;
+  opacity: 0.3;
+  pointer-events: none;
+}
