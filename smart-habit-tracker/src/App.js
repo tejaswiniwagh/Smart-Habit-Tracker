@@ -9,6 +9,7 @@ import HabitDashboard from './pages/HabitDashboard';
 import ForgotPassword from './pages/ForgotPassword';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import HomePage from './pages/HomePage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       <ToastContainer />
       <div style={{ padding: '2rem' }}>
         <Routes>
+          <Route path="/" element={<HomePage/>} />
           <Route path="/habit-dashboard" element={<HabitDashboard />} />
           <Route path="/register" element={<Register />} />
           <Route path='/login' element={<Login />} />
