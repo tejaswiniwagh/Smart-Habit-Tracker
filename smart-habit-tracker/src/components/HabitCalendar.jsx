@@ -48,7 +48,7 @@ const HabitCalendar = ({ completionDates = [], onMarkComplete }) => {
           if (isToday(d) && onMarkComplete) onMarkComplete();
         }}
       >
-        {d}
+        {completed ? <span title={date.toDateString()}>🔥</span> : d}
       </motion.div>
     );
   };
@@ -67,6 +67,11 @@ const HabitCalendar = ({ completionDates = [], onMarkComplete }) => {
         <button onClick={nextMonth}>➡️</button>
       </div>
       <div className="calendar-grid">{calendarDays}</div>
+      {onMarkComplete && (
+        <button className="calendar-mark-btn" onClick={onMarkComplete}>
+          ✅ Mark Today Complete
+        </button>
+      )}
     </div>
   );
 };

@@ -55,4 +55,12 @@ export const deleteHabit = (id) =>
 export const trackHabit = (id) => 
   API.post(`/habits/${id}/track`);
 
+export const trackUserVisit = ({ user_id }) =>
+  API.post('/visits/track', { user_id });
+
+export const getUserVisits = (user_id) =>
+  API.get('/visits', { params: { user_id } });
+
+export const getTrackedDates = (id) =>
+  API.get(`/habits/${id}/tracked-dates`);
 

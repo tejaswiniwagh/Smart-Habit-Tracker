@@ -48,3 +48,34 @@
   opacity: 0.3;
   pointer-events: none;
 }
+
+/* === Habit Filter Styling === */
+.habit-filter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+  color: var(--text-color);
+}
+
+.habit-filter select {
+  padding: 0.5rem 1rem;
+  font-size: 0.95rem;
+  border-radius: 24px;
+  background-color: transparent;
+  color: var(--text-color);
+  border: 2px solid var(--bar-color);
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.habit-filter select:focus {
+  border-color: var(--glow);
+}
+
+.habit-filter option {
+  background-color: var(--page-bg);
+  color: var(--text-color);
+}

@@ -108,8 +108,8 @@ body {
   margin: 15px 0;
 }
 
-.input-box input {
-  width: 90%;
+.input-box input   {
+  width: 87%;
   height: 34px;
   background: transparent;
   border: 2px solid var(--bar-color);
@@ -122,7 +122,7 @@ body {
 }
 
 .input-box input:focus,
-.input-box input:valid {
+textarea:focus{
   border-color: var(--glow);
 }
 
@@ -147,7 +147,7 @@ body {
 }
 
 .forgot-password {
-  margin: -15px 0 10px;
+  margin: 10px;
   text-align: center;
 }
 
@@ -175,7 +175,7 @@ body {
 }
 
 .signup-link {
-  margin: 5px 0 5px;
+  margin: 20px 0 15px;
   text-align: center;
 }
 
@@ -192,7 +192,7 @@ body {
 
 /* ✅ NEW: Dark/Light mode support for select */
 .input-box select {
-  width: 90%;
+  width: 160%;
   height: 36px;
   background-color: transparent;
   color: var(--text-color);
@@ -215,7 +215,7 @@ body {
 
 /* ✅ NEW: Dark/Light mode support for select */
 .input-box textarea {
-  width: 90%;
+  width: 100px;
   height: 36px;
   background-color: transparent;
   color: var(--text-color);
@@ -264,3 +264,437 @@ body {
   100% { opacity: 0; }
 }
 
+/* Counter button styling */
+.counter-btn {
+  background-color: var(--primary-color);
+  color: white;
+  font-size: 1.2rem;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.counter-btn:hover {
+  background-color: var(--primary-dark);
+}
+
+.custom-datepicker-input {
+  width: 100%;
+  padding: 8px 12px 8px 36px; /* left padding for icon */
+  border-radius: 12px;
+  font-size: 0.95rem;
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  box-sizing: border-box;
+}
+
+.input-box
+.custom-datepicker-input {
+  width: 120%;
+}
+
+
+.calendar-icon-left {
+  position: absolute;
+  left: 220px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-color);
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+/* Habit Dashboard */
+
+.habit-dashboard {
+  background-color: var(--page-bg);
+  color: var(--text-color);
+  min-height: 100vh;
+  padding-top: 6rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.habit-heading {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--glow);
+  margin-bottom: 2.5rem;
+}
+
+.habit-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.habit-card {
+  background-color: var(--page-bg);
+  border: 2px solid var(--glow);
+  border-radius: 12px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.habit-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 8px var(--glow);
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--glow);
+}
+
+.card-category {
+  font-size: 0.875rem;
+  color: gray;
+}
+
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+}
+
+.popup {
+  background-color: var(--page-bg);
+  color: var(--text-color);
+  border: 2px solid var(--glow);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  width: 90%;
+  max-width: 400px;
+  position: relative;
+  animation: fadeInScale 0.3s ease-in-out;
+}
+
+@keyframes fadeInScale {
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.popup h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--glow);
+  margin-bottom: 0.5rem;
+}
+
+.popup-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 1rem;
+  font-size: 1.25rem;
+  color: gray;
+  cursor: pointer;
+}
+
+.popup-close:hover {
+  color: red;
+}
+
+.popup-details p {
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.update-btn {
+  margin-top: 1.25rem;
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--btn-bg);
+  color: var(--page-bg);
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.update-btn:hover {
+  filter: brightness(110%);
+}
+
+.calendar-container {
+  background: var(--page-bg);
+  padding: 16px;
+  border-radius: 12px;
+  margin: 20px auto;
+  max-width: 700px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.calendar-heading {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: var(--register-heading-color);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 8px;
+  justify-items: center;
+}
+
+.calendar-day {
+  width: 30px;
+  height: 30px;
+  font-size: 0.85rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calendar-day.done {
+  background: green;
+  color: white;
+}
+
+.calendar-day.missed {
+  background: red;
+  color: white;
+}
+
+.delete-icon {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: red;
+  transition: transform 0.2s ease;
+}
+
+.delete-icon:hover {
+  transform: scale(1.2);
+}
+
+.no-habits-message {
+  text-align: center;
+  margin-top: 40px;
+  color: #aaa;
+  font-size: 1.2rem;
+  animation: fadeIn 0.6s ease-in-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Habit Dashboard with Light Theme  */
+.habit-dashboard h2 {
+  font-size: 2em;
+  color: var(--register-heading-color);
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.habit-heading {
+  font-size: 2em;
+  color: var(--register-heading-color);
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+/* === Dashboard Styling === */
+.dashboard-wrapper {
+  padding-top: 80px;
+  min-height: 100vh;
+  background-color: var(--page-bg);
+  color: var(--text-color);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.dashboard-heading {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--register-heading-color);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.dashboard-subtext {
+  font-size: 1.1rem;
+  color: var(--text-color);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.dashboard-card {
+  background-color: var(--page-bg);
+  border: 2px solid var(--bar-color);
+  border-radius: 12px;
+  padding: 1rem;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.dashboard-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 8px var(--glow);
+}
+
+.dashboard-card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--register-heading-color);
+}
+
+.dashboard-card-category {
+  font-size: 0.9rem;
+  color: gray;
+}
+
+.dashboard-btn {
+  padding: 0.75rem 1.5rem;
+  font-weight: bold;
+  background-color: var(--btn-bg);
+  color: var(--page-bg);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.dashboard-btn:hover {
+  filter: brightness(110%);
+}
+
+.habit-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  padding: 0 2rem;
+}
+
+.habit-card {
+  background-color: var(page-bg);
+  border: 2px solid var(--bar-color);
+  border-radius: 16px;
+  padding: 1rem 1.2rem;
+  cursor: pointer;
+  box-shadow: 2px 4px 8px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+}
+
+.habit-card:hover {
+  transform: scale(1.04);
+  box-shadow: 0 0 12px rgba(0, 255, 255, 0.2);
+  border-color: var(--glow);
+}
+
+.card-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--register-heading-color);
+  margin-bottom: 0.25rem;
+  text-transform: capitalize;
+}
+
+.card-category {
+  font-size: 0.85rem;
+  color: #444;
+  font-style: italic;
+}
+
+.calendar-container {
+  background-color: var(page-bg);
+  padding: 24px;
+  border-radius: 16px;
+  margin: 30px auto;
+  max-width: 700px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border: 2px solid var(--bar-color);
+}
+
+.calendar-heading {
+  font-weight: 700;
+  font-size: 1.4rem;
+  margin-bottom: 16px;
+  color: var(--register-heading-color);
+}
+
+.calendar-month {
+  color: var(--register-heading-color);
+  font-weight: 700;
+  font-size: 1.3rem;
+  margin: 0 16px;
+}
+
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 10px;
+  justify-items: center;
+}
+
+.calendar-day {
+  width: 36px;
+  height: 36px;
+  font-size: 0.95rem;
+  background: var(--page-bg);
+  color: var(--register-heading-color);
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.calendar-day:hover {
+  background: var(--glow);
+  color: #fff;
+}
+
+.calendar-day.done {
+  background: #3bb54a;
+  color: var(page-bg);
+}
+
+.calendar-day.missed {
+  background: #e74c3c;
+  color: var(page-bg);
+}
+
+.msg {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+.msg.success {
+  background-color: #d4edda;
+  color: #155724;
+}
+.msg.error {
+  background-color: #f8d7da;
+  color: #721c24;
+}

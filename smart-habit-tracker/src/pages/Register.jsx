@@ -1,12 +1,16 @@
+// src/pages/Register.jsx
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Auth.css';
-// import axios from 'axios';
 import { sendOTP, registerUser } from '../utils/api';
 
 const Register = () => {
+  const navigate = useNavigate();
   const [showOTP, setShowOTP] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
   const [errors, setErrors] = useState({});
+  const [successMsg, setSuccessMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -41,11 +45,7 @@ const Register = () => {
   const handleSendOTP = async () => {
     if (!formData.email) return alert("Email is required.");
     try {
-      // await axios.post(`${process.env.REACT_APP_API_URL}/auth/send-otp`, {
-      //   email: formData.email
-      // });
       await sendOTP(formData.email);
-
       setShowOTP(true);
       setOtpSent(true);
     } catch (err) {
@@ -56,17 +56,21 @@ const Register = () => {
 
   const handleSubmit = async e => {
     e.preventDefault();
+    setSuccessMsg('');
+    setErrorMsg('');
     if (!validate()) return;
 
     const { confirmPassword, ...submitData } = formData;
 
     try {
-      // await axios.post(`${process.env.REACT_APP_API_URL}/auth/register`, submitData);
-      // alert("Registration successful!");
       await registerUser(submitData);
-      alert("Registration successful!");
+      setSuccessMsg('✅ Registration successful! Redirecting to login...');
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
     } catch (err) {
-      alert("Registration failed: " + (err?.response?.data?.message || err.message));
+      const message = err?.response?.data?.message || err.message;
+      setErrorMsg('❌ Registration failed: ' + message);
     }
   };
 
@@ -78,6 +82,8 @@ const Register = () => {
         ))}
         <div className="auth-box">
           <h2>Register</h2>
+          {successMsg && <div className="msg success">{successMsg}</div>}
+          {errorMsg && <div className="msg error">{errorMsg}</div>}
           <form onSubmit={handleSubmit}>
             <div className="input-box">
               <input type="text" name="name" placeholder="Name" required value={formData.name} onChange={handleChange} />
