@@ -1,9 +1,20 @@
+// ✅ Auto-track habit for today (only once per habit) and show visit calendar
+// src/pages/HabitDashboard.jsx
+
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getHabits, getHabitStats } from '../utils/api';
+import {
+  getHabits,
+  getTrackedDates,
+  trackHabit,
+  trackUserVisit,
+  getUserVisits
+} from '../utils/api';
 import { useNavigate } from 'react-router-dom';
 import HabitCalendar from '../components/HabitCalendar.jsx';
+import HabitFilter from '../components/HabitFilter.jsx';
 import { toast } from 'react-toastify';
+import { FaCalendarAlt } from 'react-icons/fa';
 import './Auth.css';
 
 const emojiFromStreak = (streak) => {
@@ -15,6 +26,7 @@ const emojiFromStreak = (streak) => {
 
 const HabitPopup = ({ habit, onClose }) => {
   if (!habit) return null;
+  const progress = Math.max(0, Math.min(100, Math.round((habit.streak / habit.target_days) * 100))) || 0;
 
   return (
     <div className="popup-overlay">
@@ -30,6 +42,16 @@ const HabitPopup = ({ habit, onClose }) => {
           <p>🔔 Reminder: {habit.reminder ? 'Yes' : 'No'}</p>
           <p>🔥 Streak: {habit.streak} days</p>
         </div>
+        <div className="progress-container">
+          <motion.div
+            className="progress-bar"
+            initial={{ width: 0 }}
+            animate={{ width: `${progress}%` }}
+            transition={{ duration: 0.6 }}
+            style={{ background: '#4caf50', height: '8px', borderRadius: '4px', marginTop: '8px' }}
+          />
+          <small>{progress}% complete ({habit.streak}/{habit.target_days})</small>
+        </div>
         <button className="update-btn">Update Habit</button>
       </div>
     </div>
@@ -39,38 +61,83 @@ const HabitPopup = ({ habit, onClose }) => {
 export default function HabitDashboard() {
   const [habits, setHabits] = useState([]);
   const [selectedHabit, setSelectedHabit] = useState(null);
+  const [visitDates, setVisitDates] = useState([]);
+  const [filterCategory, setFilterCategory] = useState('');
+  const [calendarHabitId, setCalendarHabitId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+    const user_id = localStorage.getItem('user_id');
+
     if (!token) {
       toast.warning('Login required!');
       return navigate('/login');
     }
 
-    const fetchHabits = async () => {
+    const today = new Date().toISOString().split('T')[0];
+
+    const trackVisitOncePerDay = async () => {
+      const lastVisit = localStorage.getItem('last_visit');
+
+      if (user_id && lastVisit !== today) {
+        try {
+          await trackUserVisit({ user_id });
+          localStorage.setItem('last_visit', today);
+        } catch (err) {
+          console.error('Visit track error:', err);
+        }
+      }
+    };
+
+    const fetchHabitsAndVisits = async () => {
       try {
-        const res = await getHabits(token);
+        const habitRes = await getHabits(token);
+
         const enriched = await Promise.all(
-          res.data.map(async (habit) => {
+          habitRes.data.map(async (habit) => {
             try {
-              const stats = await getHabitStats(habit.id);
-              return { ...habit, streak: stats.streak, completionDates: stats.dates || [] };
+              const tracked = await getTrackedDates(habit.id);
+              const dates = tracked.data.map(item => item.tracking_date);
+
+              const alreadyTracked = dates.includes(today);
+              if (!alreadyTracked) {
+                await trackHabit(habit.id);
+                dates.push(today);
+                if (calendarHabitId === habit.id) {
+                  toast.success(`✅ ${habit.habit_name} auto-tracked for today.`);
+                }
+              }
+
+              return {
+                ...habit,
+                streak: dates.length,
+                completionDates: dates
+              };
             } catch {
               return { ...habit, streak: 0, completionDates: [] };
             }
           })
         );
         setHabits(enriched);
+
+        if (user_id) {
+          const visitRes = await getUserVisits(user_id);
+          const visits = visitRes.data.map(v => v.start || v.visit_date);
+          setVisitDates(visits);
+        }
       } catch (err) {
-        console.error('Error fetching habits:', err);
+        console.error('Dashboard load error:', err);
+        toast.error('Failed to load dashboard');
       }
     };
 
-    fetchHabits();
-  }, [navigate]);
+    trackVisitOncePerDay();
+    fetchHabitsAndVisits();
+  }, [navigate, calendarHabitId]);
 
-  const allDates = habits.flatMap(h => h.completionDates || []);
+  const categories = [...new Set(habits.map(h => h.category).filter(Boolean))];
+  const visibleHabits = filterCategory ? habits.filter(h => h.category === filterCategory) : habits;
 
   return (
     <motion.div
@@ -81,7 +148,9 @@ export default function HabitDashboard() {
     >
       <h1 className="habit-heading">🌿 Your Smart Habit Dashboard</h1>
 
-      {habits.length === 0 ? (
+      <HabitFilter selected={filterCategory} onChange={setFilterCategory} categories={categories} />
+
+      {visibleHabits.length === 0 ? (
         <div className="no-habits-message">
           <h2>😎 No habits yet!</h2>
           <p>Start your habit journey today 💪🌱</p>
@@ -89,7 +158,7 @@ export default function HabitDashboard() {
       ) : (
         <div className="habit-grid">
           <AnimatePresence>
-            {habits.map((habit, index) => (
+            {visibleHabits.map((habit, index) => (
               <motion.div
                 key={habit.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -97,12 +166,12 @@ export default function HabitDashboard() {
                 transition={{ delay: index * 0.05 }}
                 whileHover={{ scale: 1.03 }}
                 className="habit-card"
-                onClick={() => setSelectedHabit(habit)}
               >
-                <div className="card-title">
+                <div onClick={() => setSelectedHabit(habit)} className="card-title">
                   {habit.habit_name} {emojiFromStreak(habit.streak)}
                 </div>
                 <div className="card-category">#{habit.category}</div>
+                <FaCalendarAlt className="calendar-icon" onClick={() => setCalendarHabitId(habit.id)} />
               </motion.div>
             ))}
           </AnimatePresence>
@@ -110,7 +179,16 @@ export default function HabitDashboard() {
       )}
 
       <HabitPopup habit={selectedHabit} onClose={() => setSelectedHabit(null)} />
-      <HabitCalendar completionDates={allDates} />
+
+      {calendarHabitId && (
+        <div className="calendar-wrapper">
+          <HabitCalendar
+            completionDates={(habits.find(h => h.id === calendarHabitId)?.completionDates) || []}
+            visitDates={visitDates}
+            onMarkComplete={null}
+          />
+        </div>
+      )}
     </motion.div>
   );
 }
